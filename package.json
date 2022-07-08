@@ -1,0 +1,28 @@
+{
+  "name": "cerberus",
+  "version": "1.0.0",
+  "description": "Discord bot",
+  "main": "application.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shir0tetsuo/Cerberus.git"
+  },
+  "author": "shadowsword#0179",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/shir0tetsuo/Cerberus/issues"
+  },
+  "homepage": "https://github.com/shir0tetsuo/Cerberus#readme",
+  "dependencies": {
+    "canvas": "^2.9.3",
+    "chalk": "^5.0.1",
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.1",
+    "moment": "^2.29.4",
+    "sequelize": "^6.21.2",
+    "sqlite3": "^5.0.8"
+  }
+}
