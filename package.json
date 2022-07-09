@@ -19,10 +19,12 @@
   "dependencies": {
     "canvas": "^2.9.3",
     "chalk": "^5.0.1",
+    "colorette": "^2.0.19",
     "discord.js": "^13.8.1",
     "dotenv": "^16.0.1",
     "moment": "^2.29.4",
     "sequelize": "^6.21.2",
-    "sqlite3": "^5.0.8"
+    "sqlite3": "^5.0.8",
+    "time-utilities": "^1.0.2"
   }
 }
