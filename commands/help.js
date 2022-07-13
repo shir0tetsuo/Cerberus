@@ -14,7 +14,7 @@ exports.run = (client, message, params, perms) => {
     const commandNames = goodCommands.keys()
     var longest = Array.from(goodCommands.keys())
     //const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-    let header = `= ${client.BOTNAME} Commands (AUTH ${perms} @ ${(new Date()) - client.container.ActionTime.getTime()}ms) =\n\n[Page ${page}, ${client.PREFIX}help <commandname> for details]\n`;
+    let header = `= ${client.user.tag} Commands (AUTH ${perms} @ ${(new Date()) - client.container.ActionTime.getTime()}ms) =\n\n[Page ${page}, ${client.PREFIX}help <commandname> for details]\n`;
     //header+=`* Level ${message.author.level}, Silver ${message.author.silver}, Gold ${message.author.gold}\n\n`
     let output = ``
     goodCommands.forEach( c => {
