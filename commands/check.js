@@ -13,7 +13,7 @@ exports.run = async (client, message, params, perms) => {
   joinDiscord = moment(user.user.createdAt).format('lll') + '\n*' + moment(new Date()).diff(user.user.createdAt, 'days') + ' days ago*';
   joinServer = moment(user.joinedAt).format('lll') + '\n*' + moment(new Date()).diff(user.joinedAt, 'days') + ' days ago*'
   //`${user} \`${user.id}\`\n\`Joined Discord:\` ${joinDiscord}\n\`Joined Server:\` ${joinServer}\n${userRoles}`
-  message.channel.send({ embeds: [{
+  message.reply({ embeds: [{
     color: 0x2d9582,
     title: `User Information (${(new Date()) - client.container.ActionTime.getTime()}ms)`,
     thumbnail: {
@@ -34,7 +34,7 @@ exports.run = async (client, message, params, perms) => {
 exports.conf = {
   enabled: true,
   guildOnly: true,
-  aliases: ['chk','id','u','user'],
+  aliases: ['chk','id','u','user','whois','who'],
   permLevel: 1
 };
 

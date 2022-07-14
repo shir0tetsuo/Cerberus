@@ -2,7 +2,70 @@
 // Modified template from anidiots.guide
 
 const logger = require("./logger.js");
+const Sequelize = require('sequelize')
+const { Hash } = require("./func.js")
+
 //const moment = require('moment')
+
+// Database Stuff
+// Database Initialization
+const sequelize = new Sequelize('database', 'username', 'password', {
+  host: 'localhost',
+  dialect: 'sqlite',
+  logging: false,
+  storage: '../Cerberus.db',
+});
+// Defining tables
+// moves to client.Cases
+const Cases = sequelize.define('cases', {
+  // case id (unique)
+  case_id: {
+    type: Sequelize.STRING,
+    unique: true,
+  },
+  // ID of who generated the case
+  owner_id: {
+    type: Sequelize.STRING,
+    defaultValue: '0',
+    allowNull: false,
+  },
+  // ID of against
+  subject_id: {
+    type: Sequelize.STRING,
+    defaultValue: '0',
+    allowNull: false,
+  },
+  // Roles subject had before moderation
+  subject_roles: {
+    type: Sequelize.STRING,
+    defaultValue: '0',
+    allowNull: false,
+  },
+  // note, warn, mute, kick, ban
+  case_type: {
+    type: Sequelize.STRING,
+    defaultValue: 'warn',
+    allowNull: false,
+  },
+  // Mute clock, (check every 59 mins)
+  case_clock: {
+    type: Sequelize.STRING,
+    defaultValue: '0',
+    allowNull: false,
+  },
+  // Case status (open 1/true closed 0/false)
+  case_open: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: true,
+    allowNull: false,
+  },
+  // What happened
+  description: {
+    type: Sequelize.STRING,
+    defaultValue: '0',
+    allowNull: false,
+  },
+});
 
 const roles = {
   // See .env for ROLE_ELEVATEDUSER, ROLE_MODERATOR, ROLE_ADMIN, OWNER
@@ -118,4 +181,7 @@ function permlevel(client, message) {
   return permlvl;
 }
 
-module.exports = { permlevel, roles };
+//async function Function(variables) {}
+// return tag = await client.Cases.findOne({ where: {case_id: case_id }})
+
+module.exports = { permlevel, roles, Cases };

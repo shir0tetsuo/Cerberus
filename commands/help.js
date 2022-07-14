@@ -26,9 +26,9 @@ exports.run = (client, message, params, perms) => {
     return;
     } else {
     let command = params[0];
-    if (client.commands.has(command)) {
-      command = client.commands.get(command);
-      message.author.send(`= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nshortcuts:: ${command.conf.aliases.join(' || ')}`, {code:'asciidoc'});
+    if (client.container.commands.has(command)) {
+      command = client.container.commands.get(command);
+      message.author.send(`\`\`\`asciidoc\n= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nshortcuts:: ${command.conf.aliases.join(', ')}\`\`\``);
     }
   }
 };

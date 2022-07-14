@@ -39,7 +39,7 @@ module.exports = async (client, message) => {
 
   // enabled/authorized check
   if (cmd) {
-    if (cmd.conf.guildOnly == true && message.channel.type === "dm") return;// Guild-Only check
+    if (cmd.conf.guildOnly == true && message.channel.type === "DM") return message.reply(`\`${cmd.help.name}\` is a server-only command.`);// Guild-Only check
     if (cmd.conf.enabled == false) return;// Enabled check
     if (permissions < cmd.conf.permLevel) return;// Permission check
 

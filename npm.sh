@@ -22,3 +22,4 @@ npm install --save canvas
 npm install --save dotenv
 npm install --save time-utilities
 npm install --save colorette
+npm install --save crypto-js
