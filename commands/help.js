@@ -1,37 +1,83 @@
 const logger = require("../modules/logger.js")
-// Shoved into new bot from avaira project
-exports.run = (client, message, params, perms) => {
-  if (params[0] >= 2 || params[0] === 1 || !params[0]) {
-    //const commandNames = Array.from(client.commands.keys());
-    if (params[0] === undefined) {
-      var page = 1
-    } else {
-      var page = params[0]
+
+exports.run = async (client, message, params, level) => {
+  var p = params[0]; // p = command/number
+  if (!p) var p = 1; // If no input, default to page 1
+
+  const discordMaximumSendLength = 1850;
+
+  const goodCommands = client.container.commands.filter(cmd => cmd.conf.permLevel <= level && cmd.conf.enabled !== false);// array of good commands
+  const commandNames = goodCommands.keys();// keys of good commands
+  const longest = Array.from(goodCommands.keys()).reduce(function (a,b) { return a.length > b.length ? a : b });//.length - the longest command name
+
+  const allHeader = `\`\`\`asciidoc\n`, allEnder = `\`\`\``; // Unless there's another method - but this works fine
+
+  var current = 0;//current line
+  var line = {};//line data
+  var pageData = {};//lines of data
+
+  // Convert good commands into a readable line.
+  // Program reads all command lines before executing rest of script.
+  goodCommands.forEach( c => {
+    line[current] = `${client.container.Config.PREFIX}${c.help.name}${' '.repeat(longest.length - c.help.name.length)} :: ${c.help.description}\n`
+    line[current] += `${' '.repeat(longest.length + client.container.Config.PREFIX.length)} Server-Only: ${c.conf.guildOnly}, Authority: ${c.conf.permLevel}\n`
+    current++
+  })
+
+  // Is the parameter a number (page):
+  if (Number.isInteger(parseInt(p))) {
+    if (parseInt(p) < 1) return message.reply(`Can't go below Page 1.`)
+    max_lines = current;// If the program goes over this number, the program must stop.
+    current = 0;//reset current for line[current]
+    page = 0;//current page
+    var buffer = "";
+    while (page != p) {
+      // If there's space in the buffer, add a line. If not, stop.
+      while (buffer.length < discordMaximumSendLength && (buffer.length + line[current].length) < discordMaximumSendLength) {
+        buffer += line[current]
+        current++
+        if (!line[current]) break;
+      }
+      page++
+      pageData[page] = `${allHeader}= ${client.user.tag} Commands (Authority ${level}) =\n\n[Page ${page}, ${client.container.Config.PREFIX}help <page-number> or ${client.container.Config.PREFIX}help <commandname> for details]\n\n${buffer}`
+      if (line[current]) pageData[page] += `\nMore Pages Available.`;
+      if (!line[current]) break;
+      buffer = ""
     }
-    const level = perms
-    // goodCommands = myCommands
-    const goodCommands = client.container.commands.filter(cmd => cmd.conf.permLevel <= level && cmd.conf.enabled !== false)
-    const commandNames = goodCommands.keys()
-    var longest = Array.from(goodCommands.keys())
-    //const longest = commandNames.reduce((long, str) => Math.max(long, str.length), 0);
-    let header = `= ${client.user.tag} Commands (AUTH ${perms} @ ${(new Date()) - client.container.ActionTime.getTime()}ms) =\n\n[Page ${page}, ${client.PREFIX}help <commandname> for details]\n`;
-    //header+=`* Level ${message.author.level}, Silver ${message.author.silver}, Gold ${message.author.gold}\n\n`
-    let output = ``
-    goodCommands.forEach( c => {
-      output += `${client.container.Config.PREFIX}${c.help.name}${' '.repeat(longest - c.help.name.length)} :: ${c.help.description}\n* GUILD ${c.conf.guildOnly} AUTH ${c.conf.permLevel}\n`
-    })
-    let hLen = 0 + ((page*1 - 1) * 1800)
-    let hMax = hLen + 1800
-    message.author.send(`\`\`\`asciidoc\n` + header + output.substring(hLen,hMax) + `\`\`\``);
-    return;
+    // If the page exists
+    if (pageData[p]) {
+      message.reply(`\`${(new Date()) - client.container.ActionTime.getTime()}ms\` ` + pageData[p] + `${allEnder} `)
     } else {
-    let command = params[0];
-    if (client.container.commands.has(command)) {
-      command = client.container.commands.get(command);
-      message.author.send(`\`\`\`asciidoc\n= ${command.help.name} = \n${command.help.description}\nusage:: ${command.help.usage}\nshortcuts:: ${command.conf.aliases.join(', ')}\`\`\``);
+      // If page number is beyond the scope
+      if (page == 1) {
+        message.reply(`There's only 1 page.`)
+      } else {
+        message.reply(`There are only ${page} pages.`)
+      }
+    }
+  // or is parameter the name of a command?:
+  } else {
+    if (client.container.commands.has(p)) {
+      command = client.container.commands.get(p);
+      message.reply({ embeds: [{
+        color: 0x2d9582,
+        title: `${command.help.name} Information (${(new Date()) - client.container.ActionTime.getTime()}ms)`,
+        fields: [{
+          name: `Description`,
+          value: `${command.help.description}\n\`Usage:\` ${command.help.usage}`
+        },
+        {
+          name: `Authority`,
+          value: `Level: ${command.conf.permLevel}\n\`Server-Only: ${command.conf.guildOnly}\``
+        },
+        {
+          name: `Shortcuts`,
+          value: `${command.conf.aliases.join(', ')}`
+        }]
+      }]})
     }
   }
-};
+}
 
 exports.conf = {
   enabled: true,
