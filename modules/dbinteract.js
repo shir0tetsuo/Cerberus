@@ -70,13 +70,13 @@ const Cases = sequelize.define('cases', {
 const roles = {
   // See .env for ROLE_ELEVATEDUSER, ROLE_MODERATOR, ROLE_ADMIN, OWNER
   // or append/modify the data structure below as needed.
-  // This may be modified/depreciated in the future, may make multi-server compatibility.
+  // This *may* be modified/depreciated in the future, may make multi-server compatibility.
 
   // Changing these arrays requires a restart.
   // Bot Admins ID Array (lvl 9)
-  "botadmins": [],
+  "botadmins": [456851594789650474], // Wife
   // Bot Support ID Array (Lvl 8)
-  "botsupport": [],
+  "botsupport": [144964273469259777,403899615205785602], // Geno & Keno
 
   permLevels: [
     { level: 0,

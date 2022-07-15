@@ -1,35 +1,35 @@
 const logger = require("../modules/logger.js")
 const { permlevel } = require("../modules/dbinteract.js")
+/*
+    Command Run Block
+
+    1.
+    ActionTime: approx. time command was executed
+      => client.container.ActionTime
+
+    2.
+    (In guild but not in cache: Refresh cache)
+    pemissions: message author permission level
+
+    3.
+    command => params, cmd
+    permLevel: The user's determined permission level.
+      => message.author.permLevel
+
+    4.
+    cmd => check if OK => [try execute]
+*/
 module.exports = async (client, message) => {
   if (message.author.bot) return; // no bots
   if (!message.content.startsWith(client.container.Config.PREFIX)) return; // no prefix, nothing to do
 
-  /*
-      Command Run Block
+  client.container.ActionTime = new Date(); // time scripts began processing result
+  if (message.guild && !message.member) await message.guild.members.fetch(message.author); // cache refresh if needed
+  let permissions = await permlevel(client, message); // calculate the permission level
 
-      1.
-      ActionTime: approx. time command was executed
-        => client.container.ActionTime
-
-      2.
-      (In guild but not in cache: Refresh cache)
-      pemissions: message author permission level
-
-      3.
-      command => params, cmd
-      permLevel: The user's determined permission level.
-        => message.author.permLevel
-
-      4.
-      cmd => check if OK => [try execute]
-  */
-
-  client.container.ActionTime = new Date();
-  if (message.guild && !message.member) await message.guild.members.fetch(message.author);
-  let permissions = await permlevel(client, message);
-
-  let command = message.content.split(' ')[0].slice(client.container.Config.PREFIX.length);
-  let params = message.content.split(' ').slice(1);
+  let command = message.content.split(' ')[0].slice(client.container.Config.PREFIX.length); // the command
+  let params = message.content.split(' ').slice(1); // the parameters
+  // set cmd: check to see if the command or the command alias exists
   const cmd = client.container.commands.get(command) || client.container.commands.get(client.container.aliases.get(command));
 
   if (!cmd) return;// No command found

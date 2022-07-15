@@ -13,7 +13,7 @@ async function awaitReply(msg, question, limit = 60000) {
   }
 }
 
-async function Hash(msg) {
+async function Hash(msg = "") {
   t = new Date().toLocaleString();
   const h = {
     hash: SHA256(msg + t).toString(),
@@ -23,9 +23,13 @@ async function Hash(msg) {
   return h
 }
 
+function Rand(data) {
+  return data[Math.floor(Math.random() * data.length)]
+}
+
 process.on("unhandledRejection", err => {
   logger.error(`Unhandled rejection: ${err}`);
   console.error(err);
 });
 
-module.exports = { awaitReply, Hash };
+module.exports = { awaitReply, Hash, Rand };

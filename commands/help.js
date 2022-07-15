@@ -1,10 +1,14 @@
 const logger = require("../modules/logger.js")
+const { roles } = require("../modules/dbinteract.js")
 
 exports.run = async (client, message, params, level) => {
   var p = params[0]; // p = command/number
   if (!p) var p = 1; // If no input, default to page 1
 
-  const discordMaximumSendLength = 1850;
+  const levelName = roles.permLevels.find(l => l.level === level).name;
+
+  const discordMaximumSendLength = 1800; // Leave enough space for the "static" content
+  //const discordMaximumSendLength = 200; // for testing purposes
 
   const goodCommands = client.container.commands.filter(cmd => cmd.conf.permLevel <= level && cmd.conf.enabled !== false);// array of good commands
   const commandNames = goodCommands.keys();// keys of good commands
@@ -39,14 +43,16 @@ exports.run = async (client, message, params, level) => {
         if (!line[current]) break;
       }
       page++
-      pageData[page] = `${allHeader}= ${client.user.tag} Commands (Authority ${level}) =\n\n[Page ${page}, ${client.container.Config.PREFIX}help <page-number> or ${client.container.Config.PREFIX}help <commandname> for details]\n\n${buffer}`
+      pageData[page] = `${allHeader}= ${client.user.tag} Commands (Authority ${level} ${levelName}) =\n\n[Page ${page}, ${client.container.Config.PREFIX}help <page-number> or ${client.container.Config.PREFIX}help <commandname> for details]\n\n${buffer}`
       if (line[current]) pageData[page] += `\nMore Pages Available.`;
       if (!line[current]) break;
       buffer = ""
     }
     // If the page exists
     if (pageData[p]) {
-      message.reply(`\`${(new Date()) - client.container.ActionTime.getTime()}ms\` ` + pageData[p] + `${allEnder} `)
+      const output = `\`${(new Date()) - client.container.ActionTime.getTime()}ms\` ` + pageData[p] + `${allEnder}`
+      logger.log(`{ Output: ${output.length} }`,"debug")
+      message.reply(output)
     } else {
       // If page number is beyond the scope
       if (page == 1) {
