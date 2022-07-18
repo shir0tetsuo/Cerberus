@@ -24,6 +24,7 @@ module.exports = async (client, message) => {
   if (!message.content.startsWith(client.container.Config.PREFIX)) return; // no prefix, nothing to do
 
   client.container.ActionTime = new Date(); // time scripts began processing result
+  client.container.MessageTime = message.createdTimestamp;
   if (message.guild && !message.member) await message.guild.members.fetch(message.author); // cache refresh if needed
   let permissions = await permlevel(client, message); // calculate the permission level
 

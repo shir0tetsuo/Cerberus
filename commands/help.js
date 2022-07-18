@@ -50,7 +50,7 @@ exports.run = async (client, message, params, level) => {
     }
     // If the page exists
     if (pageData[p]) {
-      const output = `\`${(new Date()) - client.container.ActionTime.getTime()}ms\` ` + pageData[p] + `${allEnder}`
+      const output = `\`${(new Date()) - client.container.MessageTime}ms\` ` + pageData[p] + `${allEnder}`
       logger.log(`{ Output: ${output.length} }`,"debug")
       message.reply(output)
     } else {
@@ -67,7 +67,7 @@ exports.run = async (client, message, params, level) => {
       command = client.container.commands.get(p);
       message.reply({ embeds: [{
         color: 0x2d9582,
-        title: `${command.help.name} Information (${(new Date()) - client.container.ActionTime.getTime()}ms)`,
+        title: `${command.help.name} Information (${(new Date()) - client.container.MessageTime}ms)`,
         fields: [{
           name: `Description`,
           value: `${command.help.description}\n\`Usage:\` ${command.help.usage}`

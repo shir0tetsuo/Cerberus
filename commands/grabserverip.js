@@ -32,6 +32,6 @@ exports.conf = {
 
 exports.help = {
   name: 'global',
-  description: 'Executes child process providing global IP address of application server in DM.',
+  description: 'Executes process (Linux) providing global IP address of application server in DM.',
   usage: 'global'
 }

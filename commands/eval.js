@@ -4,6 +4,7 @@
 // purging the hard drive. DO NOT LET ANYONE ELSE USE THIS
 
 const { codeBlock } = require("@discordjs/builders");
+const logger = require("../modules/logger.js")
 
 /*
   MESSAGE CLEAN FUNCTION
@@ -23,7 +24,7 @@ async function clean(client, text) {
     .replace(/`/g, "`" + String.fromCharCode(8203))
     .replace(/@/g, "@" + String.fromCharCode(8203));
 
-  text = text.replaceAll(client.token, "[REDACTED]");
+  text = text.replaceAll(client.container.Config.TOKEN, "[REDACTED]");
 
   return text;
 }
